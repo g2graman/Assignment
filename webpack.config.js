@@ -3,12 +3,24 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  devtool: 'sourcemap',
-  entry: {},
+  devtool: 'eval-source-map',
+  debug: false,
+  entry: [
+    //'webpack-hot-middleware/client?reload=true',
+    path.join(__dirname, 'client/app/app.ts')
+  ],
+  resolve: {
+    extensions: ['', '.ts', '.js']
+  },
   module: {
+    preLoaders: [{
+        test: /\.ts$/,
+        loader: 'tslint',
+        exclude: /node_modules/
+    }],
     loaders: [
-       { test: /\.js$/, exclude: [/app\/lib/, /node_modules/], loader: 'ng-annotate!babel' },
-       { test: /\.html$/, loader: 'raw' },
+       { test: /\.ts$/, exclude: [/app\/lib/, /node_modules/], loader: 'ng-annotate!babel' },
+       { test: /\.jade/, loader: 'jade' },
        { test: /\.styl$/, loader: 'style!css!stylus' },
        { test: /\.css$/, loader: 'style!css' }
     ]

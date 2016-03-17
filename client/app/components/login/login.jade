@@ -1,0 +1,29 @@
+form(name="Form", ng-submit="ctrl.login()")
+    md-content.md-padding(layout-xs='column', layout='row', layout-align="center center")
+        div(flex='50', layout='column')
+            md-card
+                md-card-title
+                    md-card-title-text
+                        span.md-headline Title
+                        span.md-subhead Subtitle
+                md-card-content
+                    div
+                        md-input-container(flex-gt-sm="80", flex-offset="10", flex-sm="100")
+                            label(for="email") Email
+                            input#email(ng-model='ctrl.email', type="email", name="email", required)
+                            div(ng-if="Form.email.$invalid && Form.email.$touched", ng-messages='Form.email.$error')
+                                div(ng-message="required") Email required
+                                div(ng-message="email") This must be an e-mail address
+                        md-input-container(flex-gt-sm="80", flex-offset="10", flex-sm="100")
+                            label(for="password") Password
+                            input#password(ng-model='ctrl.password', type='password', name="password", required)
+                            div(ng-if="Form.password.$invalid && Form.password.$touched", ng-messages='Form.password.$error')
+                                div(ng-message='required') Password Required
+                md-card-actions(layout='row', layout-align='space-between center')
+                    md-button.md-raised(flex='25', flex-sm='100') Register
+                    md-button.md-raised.md-primary(
+                        type="submit",
+                        flex='25',
+                        flex-sm='100',
+                        ng-disabled="!Form.password.$dirty || Form.password.$invalid || !Form.email.$dirty || Form.email.$invalid"
+                    ) Login
