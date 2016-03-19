@@ -5,9 +5,12 @@ const Waterline = require('waterline');
 const memory = require('sails-memory');
 const mongo = require('sails-mongo');
 const requireDir = require('require-dir');
-const ModelDefinitions = requireDir('./models');
 
-let db = new Waterline();
+const ModelDefinitions = requireDir('./models');
+const Controllers = requireDir('./controllers');
+const UserSeeder = require('./seeds/users.js');
+
+let DB = new Waterline();
 
 let config = {
   adapters: {
@@ -22,28 +25,42 @@ let config = {
   }
 };
 
-const initModels = (models, connection) => {
-  let configuredModels = R.map(
-    (ModelWrapper) => {
-      let filename = ModelWrapper[0],
+module.exports = function (App) {
+  const initDb = (models, controllers, connection) => {
+    return R.map(
+        (ModelWrapper) => {
+        let filename = ModelWrapper[0],
         model = ModelWrapper[1];
 
-      return model(connection, filename);
-    },
-    R.toPairs(models)
+        let collection = {
+          name: filename,
+          model: model(connection, filename),
+          controller: controllers.hasOwnProperty(filename)
+            ? controllers[filename]
+            : {}
+        };
+        DB.loadCollection(collection.model);
+        return collection;
+      },
+      R.toPairs(models)
+    );
+  };
+
+
+  const collections = initDb(ModelDefinitions, Controllers, 'default');
+  DB.initialize(config, function (err, db) {
+      if (err) return console.error(err);
+
+      UserSeeder(db);
+
+      R.forEach((collection) => {
+          if (!R.isEmpty(collection) && collection.hasOwnProperty('controller')) {
+            collection.controller(collection.name, db.collections[collection.name], App);
+          }
+      }, collections);
+    }
   );
 
-  return R.map(
-    (model) => db.loadCollection(model),
-    configuredModels
-  );
+
 };
 
-initModels(ModelDefinitions, 'default');
-
-db.initialize(config, function (err, ontology) {
-    if (err) return console.error(err);
-  }
-);
-
-module.exports = db;

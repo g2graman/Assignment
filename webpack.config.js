@@ -19,7 +19,7 @@ module.exports = {
         exclude: /node_modules/
     }],
     loaders: [
-       { test: /\.ts$/, exclude: [/app\/lib/, /node_modules/], loader: 'ng-annotate!babel' },
+       { test: /\.ts$/, exclude: [/node_modules/], loader: 'ng-annotate!babel' },
        { test: /\.jade/, loader: 'jade' },
        { test: /\.styl$/, loader: 'style!css!stylus' },
        { test: /\.css$/, loader: 'style!css' }

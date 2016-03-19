@@ -1,16 +1,17 @@
 'use strict';
 
 const webpack = require('webpack');
-const devMiddleware = require('webpack-dev-middleware');
-const path = require('path');
 const express = require('express');
+
+require('express-resource');
+
 const app = express();
 
 const conf = require('../webpack.dev.config');
 const compiler = webpack(conf);
 
 app.use(
-  devMiddleware(compiler, {
+  require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: conf.output.publicPath,
     stats: {
@@ -27,7 +28,7 @@ app.use(
 app.use(require('webpack-hot-middleware')(compiler));
 
 require('./routes')(app);
-require('./db');
+require('./db')(app);
 
 app.listen(8001, '0.0.0.0', () => {
   console.log('Listening on port 8001');
