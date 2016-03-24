@@ -5,10 +5,15 @@ class UserController {
     password: string;
     email: string;
 
+    constructor (socket) {
+        console.log(socket);
+    }
+
     login() {
         this.user = new User(this.password, this.email);
     };
 }
+UserController.$inject = ['socket'];
 
 export const controller = UserController;
 export const template = require('./login.jade')();

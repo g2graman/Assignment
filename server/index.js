@@ -6,6 +6,8 @@ const express = require('express');
 require('express-resource');
 
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 const conf = require('../webpack.dev.config');
 const compiler = webpack(conf);
@@ -30,6 +32,13 @@ app.use(require('webpack-hot-middleware')(compiler));
 require('./routes')(app);
 require('./db')(app);
 
-app.listen(8001, '0.0.0.0', () => {
-  console.log('Listening on port 8001');
+server.listen(3000, '0.0.0.0', () => {
+  console.log('Listening on port 3000');
+
+  io.on('connection', function(socket){
+    console.log('a user connected');
+    socket.on('disconnect', function(){
+      console.log('user disconnected');
+    });
+  });
 });

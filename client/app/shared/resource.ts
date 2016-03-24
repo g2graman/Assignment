@@ -1,7 +1,7 @@
 import {Inject} from '../utils/utils';
 import R from 'ramda';
 
-const endpoint = 'localhost:8001';
+const endpoint = 'localhost:3000';
 
 const ResourceFactory = (endpoint, resourcePath) => {
     class Resource {

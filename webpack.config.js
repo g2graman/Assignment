@@ -7,7 +7,7 @@ module.exports = {
   debug: false,
   entry: [
     //'webpack-hot-middleware/client?reload=true',
-    path.join(__dirname, 'client/app/app.ts')
+    path.resolve(__dirname, 'client/app/app.ts')
   ],
   resolve: {
     extensions: ['', '.ts', '.js']

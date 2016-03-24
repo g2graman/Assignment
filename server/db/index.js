@@ -51,7 +51,7 @@ module.exports = function (App) {
   DB.initialize(config, function (err, db) {
       if (err) return console.error(err);
 
-      UserSeeder(db);
+      UserSeeder(db); // seed users
 
       R.forEach((collection) => {
           if (!R.isEmpty(collection) && collection.hasOwnProperty('controller')) {
